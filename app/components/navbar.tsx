@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { AsclepiusIcon, FunnelSimpleIcon, XIcon, SunDimIcon, MoonStarsIcon, HospitalIcon } from '@phosphor-icons/react';
+import { AsclepiusIcon, FunnelSimpleIcon, XIcon, SunDimIcon, MoonStarsIcon, HospitalIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
 import Lottie from 'lottie-react';
 import Nodata from '../../public/No-Data.json';
 import Searching from '../../public/Searching.json';
@@ -80,118 +80,136 @@ export default function Navbar({darkmode, setdarkmode}: any){
   };
 
   return (
-    <div className={`fixed top-0 left-0 w-full z-50 flex items-center shadow-lg dark:text-white justify-between p-5 dark:bg-gray-900 border-b-1 border-gray-500 ${scrolled ? 'bg-white' : 'bg-transparent'} ${isOpen ? 'bg-white' : 'bg-transparent'}`}>
-      <div className="flex items-center gap-2">
-        <AsclepiusIcon size={32} color="green" />
-        <h3 className="text-xl md:text-xl lg:text-2xl font-bold">Easy<span className="text-green-500">Go</span></h3>
+    <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-800' : 'bg-transparent'} py-4 px-6 md:px-12 flex items-center justify-between`}>
+      <div className="flex items-center gap-2 cursor-pointer">
+        <div className="bg-emerald-500 p-1.5 rounded-lg text-white">
+            <AsclepiusIcon size={24} weight="bold" />
+        </div>
+        <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Easy<span className="text-emerald-500">Go</span></h3>
       </div>
 
-      <div className="hidden md:flex bg-green-100 p-2 rounded-full shadow-lg dark:shadow-[0_10px_15px_-3px_rgba(255,255,255,0.05),0_4px_6px_-2px_rgba(255,255,255,0.03)] transition-all duration-300 ease-in-out">
-        <form onSubmit={handleSearch} method="post">
+      <div className="hidden md:flex items-center bg-gray-100 dark:bg-slate-800 rounded-full px-4 py-2 w-96 transition-all focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:bg-white dark:focus-within:bg-slate-800 border border-transparent focus-within:border-emerald-500/50">
+        <MagnifyingGlassIcon size={20} className="text-gray-400 mr-2" />
+        <form onSubmit={handleSearch} className="flex-1 flex">
           <input 
             type="text" 
-            placeholder="Search..." 
-            className="h-full w-35 lg:w-45 pl-3 focus:outline-none focus:ring-0 border-none bg-transparent rounded-md text-black"
+            placeholder="Search for medicines..." 
+            className="w-full bg-transparent outline-none focus:ring-0 text-sm text-slate-900 dark:text-white placeholder-gray-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)} 
           />
-          <button type="submit" className="cursor-pointer bg-green-400 w-20 hover:w-23 hover:tracking-wider p-2 rounded-full mr-1 transition-all duration-300 ease-in-out">Search</button>
         </form>
       </div>
 
       {/* Overlay */}
       {showOverlay && (
         <div
-          style={{backgroundColor: 'rgba(0,0,0,0.8)'}}
-          className={`fixed inset-0 z-50 flex justify-center backdrop-blur-xs items-center transition-all duration-500 ease-out ${
+          className={`fixed inset-0 z-50 flex justify-center items-start pt-32 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
             showOverlay ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           onClick={handleCloseOverlay}
         >
-          {/* Close button */}
-          <XIcon size={32} className="absolute top-4 right-4 text-white cursor-pointer" onClick={handleCloseOverlay} />
+          <XIcon size={32} className="absolute top-6 right-6 text-white cursor-pointer hover:text-gray-300 transition-colors" onClick={handleCloseOverlay} />
           
-          {/* Overlay content */}
           <div
-            className={`bg-white p-4 rounded-lg w-[80%] sm:w-[50%] relative z-10 transform transition-all duration-500 ease-out ${
-              showOverlay ? 'scale-100' : 'scale-95'
+            className={`bg-white dark:bg-slate-900 p-6 rounded-2xl w-[90%] md:w-[600px] shadow-2xl transform transition-all duration-300 ${
+              showOverlay ? 'scale-100 translate-y-0' : 'scale-95 -translate-y-4'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             {error && (
-              <div className="w-full h-full text-black flex flex-col justify-center items-center">
-                <Lottie animationData={Nodata} loop={true} className="h-40 w-40 mx-auto" />
-                <h3 className="text-center text-lg font-semibold">{error}</h3>
+              <div className="flex flex-col items-center justify-center py-8">
+                <Lottie animationData={Nodata} loop={true} className="h-32 w-32 mb-4" />
+                <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">{error}</h3>
               </div>
             )}
 
             {isLoading && (
-              <div className="w-full h-full text-black flex flex-col justify-center items-center">
-                <Lottie animationData={Searching} loop={true} className="h-40 w-40 mx-auto" />
-                <h3 className="text-center text-lg font-semibold">Looking for {searchQuery}</h3>
+              <div className="flex flex-col items-center justify-center py-8">
+                <Lottie animationData={Searching} loop={true} className="h-32 w-32 mb-4" />
+                <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300">Searching for "{searchQuery}"...</h3>
               </div>
             )}
 
             {searchResults.length > 0 && (
-  <ul>
-    {searchResults.map((result, index) => (
-      <li key={index} className="py-2 cursor-pointer text-black ">
-        <h1>Results • Nearest Pharmacies </h1>
-        
-        {Array.isArray(result.pharms) && result.pharms.length > 0 ? (
-          <ul className="pl-5 mt-2">
-            {result.pharms.map((pharm: { name: string, address: string }, pharmIndex: number) => (
-              <li key={pharmIndex} className="flex items-center gap-2 py-2 cursor-pointer hover:bg-gray-100">
-                {/* Hospital Icon */}
-                <HospitalIcon size={20} className="text-gray-500" />
-                <div className="flex flex-col">
-                  <div className="font-semibold text-gray-700">{pharm.name}</div>
-                  <div className="text-xs text-gray-400">{pharm.address}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-400">No pharmaceuticals available</p>
-        )}
-      </li>
-    ))}
-  </ul>
-)}
-
-            
+              <div className="max-h-[60vh] overflow-y-auto pr-2">
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Search Results</h2>
+                <ul className="space-y-4">
+                  {searchResults.map((result, index) => (
+                    <li key={index} className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                         <h3 className="font-bold text-slate-900 dark:text-white">{result.name || "Unknown Drug"}</h3>
+                         <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">Available</span>
+                      </div>
+                      
+                      {Array.isArray(result.pharms) && result.pharms.length > 0 ? (
+                        <ul className="space-y-2">
+                          {result.pharms.map((pharm: { name: string, address: string }, pharmIndex: number) => (
+                            <li key={pharmIndex} className="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer group">
+                              <div className="bg-white dark:bg-slate-700 p-2 rounded-full shadow-sm group-hover:shadow-md transition-shadow">
+                                <HospitalIcon size={20} className="text-emerald-500" />
+                              </div>
+                              <div>
+                                <div className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{pharm.name}</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">{pharm.address}</div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-500 italic">No pharmacies listed nearby.</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Other navbar content */}
-      <div className="hidden md:flex md:justify-center md:items-center gap-3 transition-all duration-300">
-        <button onClick={() => setdarkmode(!darkmode)} className="rounded-full">
-          {darkmode ? <MoonStarsIcon size={28} /> : <SunDimIcon size={28} />}
+      {/* Desktop Links */}
+      <div className="hidden md:flex items-center gap-8">
+        <nav className="flex gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+            {[
+              { name: 'Home', href: '/' },
+              { name: 'About', href: '/about' },
+              { name: 'Services', href: '/services' },
+              { name: 'Contact', href: '/contact' }
+            ].map((item) => (
+                <a key={item.name} href={item.href} className="hover:text-emerald-500 transition-colors relative group">
+                    {item.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 transition-all group-hover:w-full"></span>
+                </a>
+            ))}
+        </nav>
+        
+        <button 
+            onClick={() => setdarkmode(!darkmode)} 
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+        >
+          {darkmode ? <MoonStarsIcon size={24} weight="fill" /> : <SunDimIcon size={24} weight="fill" />}
         </button>
-        <a href="#" className="hover:font-bold hover:tracking-wider">Home</a>
-        <a href="#" className="hover:font-bold hover:tracking-wider">About</a>
-        <a href="#" className="hover:font-bold hover:tracking-wider">Services</a>
-        <a href="#" onClick={() => { console.log("Contact link clicked"); }} className="hover:font-bold hover:tracking-wider">Contact</a>
       </div>
 
-      <div className="md:hidden flex gap-3 justify-center items-center">
-        <button onClick={() => setdarkmode(!darkmode)} className="rounded-full">
-          {darkmode ? <MoonStarsIcon size={28} /> : <SunDimIcon size={28} />}
+      {/* Mobile Menu Button */}
+      <div className="md:hidden flex items-center gap-4">
+        <button onClick={() => setdarkmode(!darkmode)} className="text-slate-600 dark:text-slate-300">
+          {darkmode ? <MoonStarsIcon size={24} /> : <SunDimIcon size={24} />}
         </button>
-        <button onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <XIcon size={28} /> : <FunnelSimpleIcon size={28} />}
+        <button onClick={() => setIsOpen(!isOpen)} className="text-slate-600 dark:text-slate-300">
+          {isOpen ? <XIcon size={24} /> : <FunnelSimpleIcon size={24} />}
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute right-0 top-14 mt-4 w-full bg-white dark:bg-gray-900 rounded-b-xl p-6 gap-6 shadow-lg dark:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.4),0_4px_6px_-2px_rgba(0,0,0,0.3)] duration-300 ease-in-out transform transition-all opacity-100 translate-y-0">
-          <div className="flex flex-col items-end p-4 gap-4 text-right">
-            <a href="#" className="hover:font-bold hover:tracking-wider">Home</a>
-            <a href="#" className="hover:font-bold hover:tracking-wider">About</a>
-            <a href="#" className="hover:font-bold hover:tracking-wider">Services</a>
-            <a href="#" className="hover:font-bold hover:tracking-wider">Contact</a>
-          </div>
+        <div className="absolute top-full left-0 w-full bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-800 shadow-xl p-6 flex flex-col gap-4 animate-slide-up">
+            {[{name: 'Home', href: '/'}, {name: 'About', href: '/about'}, {name: 'Services', href: '/services'}, {name: 'Contact', href: '/contact'}].map((item) => (
+                <a key={item.name} href={item.href} className="text-lg font-medium text-slate-800 dark:text-slate-200 py-2 border-b border-gray-50 dark:border-slate-800">
+                    {item.name}
+                </a>
+            ))}
         </div>
       )}
     </div>

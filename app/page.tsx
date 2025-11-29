@@ -11,7 +11,7 @@ import Footer from "./components/footer";
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
 
-   useEffect(() => {
+   useEffect(() => { 
     // Check user's system preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
@@ -40,7 +40,7 @@ export default function Home() {
     }
   }, [darkMode]);
   return (
-        <main className="text-black dark:bg-gray-900 dark:text-white">
+        <main className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white selection:bg-emerald-500 selection:text-white">
       <Navbar darkmode={darkMode} setdarkmode={setDarkMode} />
       <Hero darkmode={darkMode} setdarkmode={setDarkMode} />
       <Services darkmode={darkMode} setdarkmode={setDarkMode} />
